@@ -3,51 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Light Scheduler</title>
+    <title>Graphical Light Scheduler</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f3fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #1a1a1a;
+            font-size: 24px;
         }
         label {
-            margin-right: 10px;
+            display: block;
+            margin-bottom: 8px;
+            text-align: left;
+            font-weight: 500;
         }
-        input {
-            margin-bottom: 10px;
+        input[type="time"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
         }
         button {
-            background-color: #4CAF50;
+            background-color: #2563eb;
             color: white;
+            padding: 10px 20px;
             border: none;
-            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #1d4ed8;
         }
     </style>
 </head>
 <body>
-    <h1>Light Scheduler</h1>
-    <label for="onTime">Turn ON Time:</label>
-    <input type="time" id="onTime"><br>
-    <label for="offTime">Turn OFF Time:</label>
-    <input type="time" id="offTime"><br>
-    <button onclick="submitSchedule()">Submit</button>
+    <div class="container">
+        <h1>Graphical Light Scheduler</h1>
+        <label for="onTime">On Time:</label>
+        <input type="time" id="onTime">
+        <label for="offTime">Off Time:</label>
+        <input type="time" id="offTime">
+        <button onclick="submitSchedule()">Submit</button>
+    </div>
 
     <script>
-        const ws = new WebSocket('ws://localhost:8080'); // WebSocket server address
+        const ws = new WebSocket('ws://localhost:8080'); // Adjust if needed
 
-        ws.onopen = function () {
+        ws.onopen = () => {
             console.log('WebSocket connection established');
         };
 
         function submitSchedule() {
             const onTime = document.getElementById('onTime').value;
             const offTime = document.getElementById('offTime').value;
+
+            if (!onTime || !offTime) {
+                alert("Please set both ON and OFF times.");
+                return;
+            }
+
             const schedule = { onTime, offTime };
-            ws.send(JSON.stringify(schedule));  // Send the schedule as a JSON string
+            ws.send(JSON.stringify(schedule));
+            alert(`Schedule sent:\nON at ${onTime}\nOFF at ${offTime}`);
         }
     </script>
 </body>
