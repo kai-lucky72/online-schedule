@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Scheduler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        label {
+            margin-right: 10px;
+        }
+        input {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Light Scheduler</h1>
+    <label for="onTime">Turn ON Time:</label>
+    <input type="time" id="onTime"><br>
+    <label for="offTime">Turn OFF Time:</label>
+    <input type="time" id="offTime"><br>
+    <button onclick="submitSchedule()">Submit</button>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8080'); // WebSocket server address
+
+        ws.onopen = function () {
+            console.log('WebSocket connection established');
+        };
+
+        function submitSchedule() {
+            const onTime = document.getElementById('onTime').value;
+            const offTime = document.getElementById('offTime').value;
+            const schedule = { onTime, offTime };
+            ws.send(JSON.stringify(schedule));  // Send the schedule as a JSON string
+        }
+    </script>
+</body>
+</html>
